@@ -100,8 +100,10 @@ router.get('/companies/:code', async (req, res, next) => {
             FROM invoices WHERE comp_code=$1`, [code])   
         ]);
         if(result[0].rows.length === 0) throw new ExpressError(`Unable to locate company with code ${code}`, 404);
+        const company = result[0].rows[0];
+        company.invoices = result[1].rows; 
         
-        return res.json({company: result[0].rows[0], invoices: result[1].rows });
+        return res.json({company: company });
     } catch(e) {
         return next(e)
     }
