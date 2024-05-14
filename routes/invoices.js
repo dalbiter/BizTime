@@ -20,8 +20,9 @@ router.get('/:id', async (req, res, next) => {
         if(invoiceResult.rows.length === 0) throw new ExpressError(`Unable to locate invoice with id ${id}`, 404);
         const comp_code = await db.query(`SELECT comp_code FROM invoices WHERE id=$1`, [id]);
         const companyResult = await db.query(`SELECT code, name, description FROM companies WHERE code=$1`, [comp_code.rows[0].comp_code]);
-
-        return res.json({ invoice: invoiceResult.rows[0], company: companyResult.rows[0]})
+        const invoice = invoiceResult.rows[0];
+        invoice.company = companyResult.rows[0];
+        return res.json({ invoice: invoice })
     }catch(e) {
         return next(e)
     }
@@ -53,7 +54,7 @@ router.put('/:id', async (req, res, next) => {
             WHERE id=$2
             RETURNING id, comp_code, amt, paid, add_date, paid_date`,
             [amt, id]);
-        if(result.rows.length === 0) throw new ExpressError(`Unable to locate invoice with code ${id}`, 404);
+        if(result.rows.length === 0) throw new ExpressError(`Unable to locate invoice with id ${id}`, 404);
 
         return res.json({ invoice: result.rows[0] });
     } catch(e) {
