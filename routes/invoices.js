@@ -69,7 +69,7 @@ router.delete('/:id', async (req, res, next) => {
             DELETE FROM invoices
             WHERE id=$1 RETURNING id`,
             [id])
-            if(result.rows.length === 0) throw new ExpressError(`Unable to locate invoice with code ${id}`, 404);
+            if(result.rows.length === 0) throw new ExpressError(`Unable to locate invoice with id ${id}`, 404);
             
         return res.json({ message: "Deleted" })
     } catch(e) {

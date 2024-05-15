@@ -88,7 +88,7 @@ describe("POST /invoices", () => {
     });
 });
 
-describe("PUT /companiess/:id", () => {
+describe("PUT /companies/:id", () => {
     test("Updates a single invoice", async () => {
         const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: 2424 });
         expect(res.statusCode).toBe(200);
@@ -103,17 +103,41 @@ describe("PUT /companiess/:id", () => {
     });
 });
 
-// describe("DELETE /companies/:code", () => {
-//     test("Deletes a single company", async () => {
-//         const res = await request(app).delete(`/companies/${testCompany.code}`);
-//         expect(res.statusCode).toBe(200);
-//         expect(res.body).toEqual({ message: "Deleted"})
-//     });
-//     test("Invalid id, responds with 404", async () => {
-//         const res = await request(app).delete('/companies/0');
-//         expect(res.statusCode).toBe(404);
-//         expect(res.body).toEqual({ error: {message: 'Unable to locate company with code 0', 
-//                                            status: 404}, 
-//                                            message: 'Unable to locate company with code 0'});
-//     });
-// });
+describe("DELETE /invoices/:id", () => {
+    test("Deletes a single invoice", async () => {
+        const res = await request(app).delete(`/invoices/${testInvoice.id}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual({ message: "Deleted"})
+    });
+    test("Invalid id, responds with 404", async () => {
+        const res = await request(app).delete('/invoices/0');
+        expect(res.statusCode).toBe(404);
+        expect(res.body).toEqual({ error: {message: 'Unable to locate invoice with id 0', 
+                                           status: 404}, 
+                                           message: 'Unable to locate invoice with id 0'});
+    });
+});
+
+describe("GET invoices/companies/:code", () => {
+    test("Get one company and all invoices for that company", async () => {
+        const res = await request(app).get(`/invoices/companies/${testCompany.code}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual({
+            company: {
+                code: testCompany.code,
+                name: testCompany.name,
+                description: testCompany.description,
+                invoices: [
+                    {
+                        id: expect.any(Number),
+                        comp_code: testInvoice.comp_code,
+                        amt: testInvoice.amt,
+                        paid: false,
+                        add_date: expect.any(String),
+                        paid_date: null
+                    }
+                ]
+            }
+        });
+    });
+});

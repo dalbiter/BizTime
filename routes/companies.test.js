@@ -6,7 +6,7 @@ const db = require('../db')
 // creates a test user and add to db before each test
 
 const kelty = {
-    code: 'klty',
+    code: "kelty",
     name: 'Kelty',
     description: 'Best camping gear ever!'
 };
@@ -60,7 +60,7 @@ describe("POST /companies", () => {
     });
 });
 
-describe("PUT /companiess/:code", () => {
+describe("PUT /companies/:code", () => {
     test("Updates a single company", async () => {
         const res = await request(app).put(`/companies/${testCompany.code}`).send({ name: "Mammut!",
                                                                                     description: "This was edited through PUT"        
