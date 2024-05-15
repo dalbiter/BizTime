@@ -90,9 +90,10 @@ describe("POST /invoices", () => {
 
 describe("PUT /companies/:id", () => {
     test("Updates a single invoice", async () => {
-        const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: 2424 });
+        const res = await request(app).put(`/invoices/${testInvoice.id}`).send({ amt: 2424, paid: true });
         expect(res.statusCode).toBe(200);
         expect(res.body.invoice.amt).toEqual(2424)
+        expect(res.body.invoice.paid).toEqual(true)
     });
     test("Invalid id, responds with 404", async () => {
         const res = await request(app).put('/invoices/0').send({ amt: 2424});

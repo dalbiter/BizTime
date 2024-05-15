@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS biztimedb_test;
+DROP DATABASE IF EXISTS biztimedb;
 
-CREATE DATABASE biztimedb_test;
+CREATE DATABASE biztimedb;
 
-\c biztimedb_test
+\c biztimedb
 
 DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
@@ -23,12 +23,35 @@ CREATE TABLE invoices (
     CONSTRAINT invoices_amt_check CHECK ((amt > (0)::double precision))
 );
 
--- INSERT INTO companies
---   VALUES ('apple', 'Apple Computer', 'Maker of OSX.'),
---          ('ibm', 'IBM', 'Big blue.');
+CREATE TABLE industries (
+    code text PRIMARY KEY,
+    industry text NOT NULL UNIQUE
+);
 
--- INSERT INTO invoices (comp_Code, amt, paid, paid_date)
---   VALUES ('apple', 100, false, null),
---          ('apple', 200, false, null),
---          ('apple', 300, true, '2018-01-01'),
---          ('ibm', 400, false, null);
+CREATE TABLE companies_industries (
+    comp_code INTEGER NOT NULL REFERENCES companies,
+    industry_code INTEGER NOT NULL REFERENCES industries,
+    PRIMARY KEY(comp_code, industry_code)
+);
+
+INSERT INTO companies
+  VALUES ('apple', 'Apple Computer', 'Maker of OSX.'),
+         ('ibm', 'IBM', 'Big blue.');
+
+INSERT INTO invoices (comp_Code, amt, paid, paid_date)
+  VALUES ('apple', 100, false, null),
+         ('apple', 200, false, null),
+         ('apple', 300, true, '2018-01-01'),
+         ('ibm', 400, false, null);
+
+INSERT INTO industries
+    VALUES ('tech', 'technology')
+           ('sftwr', 'software')
+           ('pmtproc', 'payment processing');
+
+INSERT INTO companies_industries
+    VALUES ('apple', 'tech')
+           ('apple', 'sftwr')
+           ('apple', 'pmtproc')
+           ('ibm', 'tech')
+           ('ibm', 'sftwr');
