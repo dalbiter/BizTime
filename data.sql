@@ -55,3 +55,35 @@ INSERT INTO companies_industries
            ('apple', 'pmtproc')
            ('ibm', 'tech')
            ('ibm', 'sftwr');
+
+SELECT i.code, i.industry, c.code
+FROM industries AS i 
+RIGHT JOIN companies_industries AS ci 
+ON i.code = ci.industry_code
+RIGHT JOIN companies AS c 
+ON c.code = ci.comp_code;
+
+SELECT c.code 
+FROM companies AS c 
+JOIN companies_industries AS ci 
+ON c.code = ci.comp_code
+WHERE ci.industry_code='tech';
+
+{industries: [
+    {
+        code: 'sftwr',
+        industry: 'software',
+        company_codes: [
+            apple,
+            ibm
+        ]
+    },
+    {
+        code: 'tech',
+        industry: 'technology',
+        company_codes: [
+            apple,
+            ibm
+        ]
+    }
+]};
