@@ -4,8 +4,10 @@ CREATE DATABASE biztimedb;
 
 \c biztimedb
 
+DROP TABLE IF EXISTS companies_industries;
 DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS industries;
 
 CREATE TABLE companies (
     code text PRIMARY KEY,
@@ -29,8 +31,8 @@ CREATE TABLE industries (
 );
 
 CREATE TABLE companies_industries (
-    comp_code INTEGER NOT NULL REFERENCES companies,
-    industry_code INTEGER NOT NULL REFERENCES industries,
+    comp_code TEXT NOT NULL REFERENCES companies,
+    industry_code TEXT NOT NULL REFERENCES industries,
     PRIMARY KEY(comp_code, industry_code)
 );
 
@@ -45,45 +47,43 @@ INSERT INTO invoices (comp_Code, amt, paid, paid_date)
          ('ibm', 400, false, null);
 
 INSERT INTO industries
-    VALUES ('tech', 'technology')
-           ('sftwr', 'software')
+    VALUES ('tech', 'technology'),
+           ('sftwr', 'software'),
            ('pmtproc', 'payment processing');
 
 INSERT INTO companies_industries
-    VALUES ('apple', 'tech')
-           ('apple', 'sftwr')
-           ('apple', 'pmtproc')
-           ('ibm', 'tech')
+    VALUES ('apple', 'tech'),
+           ('apple', 'sftwr'),
+           ('apple', 'pmtproc'),
+           ('ibm', 'tech'),
            ('ibm', 'sftwr');
 
-SELECT i.code, i.industry, c.code
-FROM industries AS i 
-RIGHT JOIN companies_industries AS ci 
-ON i.code = ci.industry_code
-RIGHT JOIN companies AS c 
-ON c.code = ci.comp_code;
+-- SELECT i.code, i.industry, c.code
+-- FROM industries AS i 
+-- RIGHT JOIN companies_industries AS ci 
+-- ON i.code = ci.industry_code
+-- RIGHT JOIN companies AS c 
+-- ON c.code = ci.comp_code;
 
-SELECT c.code 
-FROM companies AS c 
-JOIN companies_industries AS ci 
-ON c.code = ci.comp_code
-WHERE ci.industry_code='tech';
+-- SELECT comp_code 
+-- FROM companies_industries 
+-- WHERE industry_code='tech'
 
-{industries: [
-    {
-        code: 'sftwr',
-        industry: 'software',
-        company_codes: [
-            apple,
-            ibm
-        ]
-    },
-    {
-        code: 'tech',
-        industry: 'technology',
-        company_codes: [
-            apple,
-            ibm
-        ]
-    }
-]};
+-- {industries: [
+--     {
+--         code: 'sftwr',
+--         industry: 'software',
+--         company_codes: [
+--             apple,
+--             ibm
+--         ]
+--     },
+--     {
+--         code: 'tech',
+--         industry: 'technology',
+--         company_codes: [
+--             apple,
+--             ibm
+--         ]
+--     }
+-- ]};

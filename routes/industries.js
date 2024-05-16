@@ -21,10 +21,24 @@ router.post('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        
+        const result = await db.query(
+            `SELECT code, industry
+            FROM industries`
+        );
+        const industries = result.rows
+        industries.forEach(async (r) => {
+            const comp_codes = await db.query(
+                `SELECT comp_code FROM companies_industries WHERE industry_code=$1`, [r.industry_code]);
+            if(comp_codes) {
+                r.comp_codes = comp_codes.rows
+            } else {
+                r.comp_codes = [];
+            }
+        });
+        return res.json({ industries: industries })        
     } catch(e) {
         return next(e)
     }
-})
+});
 
 module.exports = router;
